@@ -7,6 +7,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.ui.pages.HomePage;
+import com.ui.pojos.User;
 public class LoginTest {
 	HomePage homePage;
 	@BeforeMethod(description = "Load the Home Page")
@@ -14,10 +15,17 @@ public class LoginTest {
 		homePage = new HomePage(EDGE);
 	}
 
-	@Test(description = "Verify valid login", groups={"smoke", "e2e"})
-	public void loginTest() {
-		String userName = homePage.goToLoginPage().doLoginWith("padagi8671@iridales.com", "password").getUserName();
+	@Test(description = "Verify valid login", groups={"smoke", "e2e"}, dataProviderClass = com.ui.dataproviders.LoginDataProvider.class, dataProvider = "LoginTestDataProvider" )
+	public void loginTest(User user) {
+		String userName = homePage.goToLoginPage().doLoginWith(user.getEmailAddress(), user.getPassword()).getUserName();
 		assertEquals(userName, "Suresh Rao");    
 	}
+	
+	@Test(description = "Verify valid login", groups={"smoke", "e2e"}, dataProviderClass = com.ui.dataproviders.LoginDataProvider.class, dataProvider = "LoginTestCSVDataProvider" )
+	public void loginTestCSV(User user) {
+		String userName = homePage.goToLoginPage().doLoginWith(user.getEmailAddress(), user.getPassword()).getUserName();
+		assertEquals(userName, "Suresh Rao");    
+	}
+
 
 }
